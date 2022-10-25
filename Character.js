@@ -1,19 +1,28 @@
 import { getDiceRollArray, getDicePlaceholderHtml, getPercentage } from './utils.js'
 
-class Character {
-    constructor(data) {
-        Object.assign(this, data)
-        this.maxHealth = this.health
-        this.diceHtml = getDicePlaceholderHtml(this.diceCount)
-    }
+/*
+Challenge
+1. Convert the constructor function to a class.
 
-    setDiceHtml() {
+    Think about:
+    1. Where do properties go?
+    2. Where do Methods go?
+*/
+
+
+function Character(data) {
+    Object.assign(this, data)
+    this.maxHealth = this.health
+
+    this.diceHtml = getDicePlaceholderHtml(this.diceCount)
+
+    this.setDiceHtml = function() {
         this.currentDiceScore = getDiceRollArray(this.diceCount)
         this.diceHtml = this.currentDiceScore.map((num) =>
             `<div class="dice">${num}</div>`).join("")
     }
 
-    takeDamage(attackScoreArray) {
+    this.takeDamage = function (attackScoreArray) {
         const totalAttackScore = attackScoreArray.reduce((total, num) => total + num)
         this.health -= totalAttackScore
         if (this.health <= 0) {
@@ -22,16 +31,18 @@ class Character {
         }
     }
 
-    getHealthBarHtml() {
+
+    this.getHealthBarHtml = function () {
         const percent = getPercentage(this.health, this.maxHealth)
         return `<div class="health-bar-outer">
                     <div class="health-bar-inner ${percent < 26 ? "danger" : ""}" 
                             style="width:${percent}%;">
                     </div>
-                </div>`
+                </div>`  
     }
+    
 
-    getCharacterHtml() {
+    this.getCharacterHtml = function () {
         const { elementId, name, avatar, health, diceCount, diceHtml } = this
         const healthBar = this.getHealthBarHtml()
         return `
